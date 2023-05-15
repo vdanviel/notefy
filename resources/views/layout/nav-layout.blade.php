@@ -20,7 +20,9 @@
             <div class="container-fluid">
 
                 {{--logo--}}
-                <img src="{{asset('img/notefy-logo-blue.png')}}" alt="Notefy" width="100">
+                <a href="{{route('hello')}}">
+                    <img src="{{asset('img/notefy-logo-blue.png')}}" alt="Notefy" width="100">
+                </a>
 
                 {{--mobile links--}}
                 <button class="navbar-toggler border border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,17 +41,21 @@
                             {{--login link. muda se estiver na pagina login--}}
                             @if(request()->path() == "login")
                                 <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="{{route('user.register')}}">Registre-se</a>
+                                    <a class="nav-link" aria-current="page" href="{{route('auth.register')}}">Registre-se</a>
                                 </li>
                             @else
                                 <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="{{route('user.login')}}">Entrar</a>
+                                    <a class="nav-link" aria-current="page" href="{{route('auth.login')}}">Entrar</a>
                                 </li>
                             @endif
                                 
                         @endguest
 
                         @auth
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="{{route('works.dashboard')}}">Painel</a>
+                            </li>
+
                             <li class="nav-item">
                                 <a class="nav-link" aria-current="page" href="#">Suas anotações</a>
                             </li>
@@ -63,7 +69,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="{{route('user.register')}}" onclick="return confirm('Você realmente deseja sair ?')">Sair</a>
+                                <a class="nav-link" aria-current="page" href="{{route('auth.register')}}" onclick="return confirm('Você realmente deseja sair ?')">Sair</a>
                             </li>
                         @endauth
 

@@ -1,7 +1,17 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GithubController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,25 +28,82 @@ Route::get('/', function () {
     return view('welcome');
 })->name('hello');
 
-#USER
+#AUTH
 
 #login
-Route::view('/login', 'user.login')->name('user.login')->middleware('guest');
+Route::view('/login', 'auth.login')->name('auth.login')->middleware('guest');
 
 #register
-Route::view('/registre-se', 'user.register')->name('user.register')->middleware('guest');
+Route::view('/registre-se', 'auth.register')->name('auth.register')->middleware('guest');
 
-#forgot-passoword
-Route::view('/esqueci-a-senha', 'user.password-forget')->middleware('guest')->name('user.forget');
+#forgot-password
+Route::get('/esqueci-a-senha', function () {
+    return view('auth.forgot');
+})->middleware('guest')->name('password.request');
+
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
+ 
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+ 
+    return $status === Password::RESET_LINK_SENT ? back()->with(['status' => __($status)]) : back()->withErrors(['email' => __($status)]);
+
+})->middleware('guest')->name('password.email');
+
+#reset the password
+Route::get('/nova-senha/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/nova-senha', function (Request $request) {
+    $request->validate(
+        [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ],
+        [
+            'token.required' => "Erro ao receber token de confirmação.",
+            'email.required' => "O campo de e-mail é obrigatório.",
+            'email.email' => "O campo de e-mail está inválido.",
+            'password.required' => "O campo de senha é obrigatório.",
+            "password.min" => "O minímo de caracteres são 8.",
+            "password.confirmed" => "O campo de confirmação da nova senha está inválido."
+        ]
+    );
+ 
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password)
+            ])->setRememberToken(Str::random(60));
+ 
+            $user->save();
+ 
+            event(new PasswordReset($user));
+        }
+    );
+ 
+    return $status === Password::PASSWORD_RESET ? redirect()->route('auth.login')->with('status', __($status)) : back()->withErrors(['email' => [__($status)]]);
+})->middleware('guest')->name('password.update');
 
 #user controller actions
 Route::controller(UserController::class)->group(function () {
-    Route::post('/login', 'auth')->name('user.auth');
-    Route::post('/registre-se', 'register')->name('user.create');
-    Route::get('/sair', [UserController::class,'logout'])->name('logout');
+    Route::post('/login', 'auth')->name('auth'); //login
+    Route::post('/registre-se', 'register')->name('auth.create'); //register
+    Route::get('/sair', 'logout')->name('logout')->name('auth.logout'); //logout
 });
 
-#NOTE
+#google auth
+Route::get('/google/auth', [GoogleController::class, 'redirect'])->name('google.redirect')->middleware('guest');
+Route::get('/google/auth/callback', [GoogleController::class, 'callback'])->name('google.callback')->middleware('guest');
 
-#note workplace
-Route::view('/note','note.workplace')->name('note.workplace')->middleware('auth');
+#github auth
+Route::get('/github/auth', [GithubController::class, 'redirect'])->name('github.redirect')->middleware('guest');
+Route::get('/github/auth/callback', [GithubController::class, 'callback'])->name('github.callback')->middleware('guest');
+
+#PAINEL
+Route::get('/painel', [DashboardController::class, 'index'])->name('works.dashboard')->middleware('auth');

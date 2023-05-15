@@ -15,7 +15,7 @@ return new class extends Migration
 
             $table->id('task_group_id');
             $table->unsignedBigInteger('id_user');
-            $table->foreign('iduser')->references('id_user')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->dateTime('task_group_date');
             $table->text('task_group_desc');
             $table->timestamps();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('tasks_groups');
     }
 };
