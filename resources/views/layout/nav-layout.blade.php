@@ -8,6 +8,8 @@
     {{--bootstrap css--}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <title>@yield('tittle')</title>
+    @stack('font')
+    @stack('css')
 </head>
 
 <body style="color: #2f2f2f">
@@ -65,11 +67,11 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="#">Perfil</a>
+                                <a class="nav-link" aria-current="page" href="{{route('works.user.profile')}}">Perfil</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="{{route('auth.register')}}" onclick="return confirm('Você realmente deseja sair ?')">Sair</a>
+                                <a class="nav-link" aria-current="page" href="{{route('auth.logout')}}" onclick="return confirm('Você realmente deseja sair ?')">Sair</a>
                             </li>
                         @endauth
 
@@ -85,6 +87,8 @@
           </nav>
 
     </header>
+
+    @stack('warning')
 
     <main class="d-flex flex-direction-column min-vh-100">@yield('content')</main>
 
@@ -108,6 +112,8 @@
     {{--bootstrap js--}}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+    @stack('library')
+    @stack('js')
 </body>
 
 </html>

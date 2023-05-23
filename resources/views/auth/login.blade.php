@@ -14,7 +14,7 @@
             
 
             {{--formulario--}}
-            <div class="container-fluid shadow-lg p-3 mb-5 bg-body-tertiary rounded w-50 ">
+            <div class="container-fluid shadow-lg p-3 mb-5 bg-white rounded w-50 ">
 
               @if ($errors->all())
                   @component('component.alert-danger')
@@ -31,29 +31,31 @@
             <form method="post" action="{{route('auth')}}">
              @csrf 
               <div class="mb-3 row">
-                <label for="inputemail" class="col-sm-2 col-form-label">Email</label>
+                <label for="inputemail" class="col-form-label">Email</label>
                 <div class="col-sm-10">
-                  <input type="email" name="email" class="form-control" id="inputemail">
+                  <input type="email" name="email" value=""{{ old('email') }}" class="form-control" id="inputemail">
                 </div>
               </div>
               
               <div class="mb-3 row">
-                <label for="inputpassword" class="col-sm-2 col-form-label">Senha</label>
+                <label for="inputpassword" class="col-form-label">Senha</label>
                 <div class="col-sm-10">
-                  <input type="password" name="password" class="form-control" id="inputpassword">
+                  <input type="password" name="password" value="{{ old('password') }}" class="form-control" id="inputpassword">
                 </div>
               </div>
               
               <div class="d-flex flex-column align-self-start">
-                <button style="width: 80px" class="btn btn-primary" type="submit">Entrar</button>
+                <button style="background: #0b61bf; width:100px" class="btn btn-primary border-0" type="submit">Entrar</button>
                 <label for="relemberme" class="mt-2">
-                  <input type="checkbox" class="form-check-input" name="relemberme" id="relemberme">
+                  <input type="checkbox" class="form-check-input"  name="relemberme" id="relemberme">
                   Lembre de mim
                 </label>
                 <a class="link-underline link-underline-opacity-0 mt-3" href="{{route('password.request')}}">Esqueceu sua senha?</a>
               </div>
 
               <hr>
+
+              <h6 style="color:#c6c7c7" class="text-center mb-3">ou</h6>
 
               <div class="d-flex justify-content-around">
 

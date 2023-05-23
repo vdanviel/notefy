@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -28,6 +29,7 @@ class GoogleController extends Controller
                     'google_id' => $google_user->getId(),
                     'name' => $google_user->getName(),
                     'email' => $google_user->getEmail(),
+                    'remember_token' => Str::random(10)
                 ]
             );
 
@@ -41,6 +43,7 @@ class GoogleController extends Controller
                     'google_id' => $google_user->getId(),
                     'name' => $google_user->getName(),
                     'email' => $google_user->getEmail(),
+                    'remember_token' => Str::random(10)
                 ]
             );
         }

@@ -11,7 +11,6 @@ use Illuminate\Auth\Events\PasswordReset;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +34,8 @@ Route::view('/login', 'auth.login')->name('auth.login')->middleware('guest');
 
 #register
 Route::view('/registre-se', 'auth.register')->name('auth.register')->middleware('guest');
+
+Route::view('test', 'auth.register-checked');
 
 #forgot-password
 Route::get('/esqueci-a-senha', function () {
@@ -90,11 +91,20 @@ Route::post('/nova-senha', function (Request $request) {
     return $status === Password::PASSWORD_RESET ? redirect()->route('auth.login')->with('status', __($status)) : back()->withErrors(['email' => [__($status)]]);
 })->middleware('guest')->name('password.update');
 
+#user profile
+Route::get('/perfil', function(Request $request){
+
+    return view('works.user.profile');
+
+})->name('works.user.profile');
+
 #user controller actions
 Route::controller(UserController::class)->group(function () {
     Route::post('/login', 'auth')->name('auth'); //login
-    Route::post('/registre-se', 'register')->name('auth.create'); //register
-    Route::get('/sair', 'logout')->name('logout')->name('auth.logout'); //logout
+    Route::post('/registre-se', 'register')->name('auth.create-request'); //register
+    Route::get('/registre-se/token/{token}', 'check_new_user')->name('auth.create.check'); //check the emailed new user
+    Route::post('/perfil', 'edit')->name('user.edit');
+    Route::get('/sair', 'logout')->name('auth.logout'); //logout
 });
 
 #google auth

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 class GithubController extends Controller
@@ -26,6 +27,7 @@ class GithubController extends Controller
                     'github_id' => $github_user->getId(),
                     'name' => $github_user->getName(),
                     'email' => $github_user->getEmail(),
+                    'remember_token' => Str::random(10)
                 ]
             );
 
@@ -37,6 +39,7 @@ class GithubController extends Controller
                     'github_id' => $github_user->getId(),
                     'name' => $github_user->getName(),
                     'email' => $github_user->getEmail(),
+                    'remember_token' => Str::random(10)
                 ]
             );
         }
@@ -46,4 +49,5 @@ class GithubController extends Controller
         return redirect()->route('works.dashboard');
     }
 
+    
 }
