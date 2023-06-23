@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
+
+#support
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
+#models
 use App\Models\User;
 
-class GithubController extends Controller
-{
+class GithubController extends Controller{
     public function redirect(){
         return Socialite::driver('github')->redirect();
     }

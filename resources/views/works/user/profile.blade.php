@@ -116,11 +116,11 @@
                     <a style="background: #0b61be" href="#" class="btn btn-primary border-0">Alterar dados</a>
                 </div>
 
-                <div class="form-group mt-5">
-                    <a href="#" class="btn btn-danger">Mude sua senha</a>
-                </div>
-
             </form>
+
+            <hr>
+
+            <a href="#" class="btn btn-danger">Deletar sua conta</a>
 
         </div>
 
